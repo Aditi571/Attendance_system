@@ -5,7 +5,47 @@ export const Admin = () => {
   //variables
    const [nameData,setnameData]=useState([])
    const [currentDateTime, setCurrentDateTime] = useState(new Date());
+   const [presentStudents, setPresentStudents] = useState([]);
+  
 
+   const handlePresentClick = (id, isPresent) => {
+    if (isPresent) {
+      if(!presentStudents.includes(id)){
+        setPresentStudents((prevPresentStudents) => [...prevPresentStudents, id]);
+      }    
+    } else {
+      setPresentStudents((prevPresentStudents) =>
+        prevPresentStudents.filter((studentId) => studentId !== id)
+      );
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const attendanceDetails = nameData.map((student) => ({
+        email: student.email,
+        isPresent: presentStudents.includes(student.email),
+        date: currentDateTime.toDateString(),
+      }));
+  
+      const response = await fetch("http://localhost:8000/saveAttendance", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(attendanceDetails),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to save attendance");
+      }
+  
+      console.log("Attendance details saved successfully");
+    } catch (error) {
+      console.error("Error saving attendance:", error);
+    }
+  };
+  
 
   //UseEffect
   useEffect(() => {
@@ -47,7 +87,7 @@ export const Admin = () => {
           return(
             <>
             <div >
-              <StudentPresent obj={obj}></StudentPresent>
+              <StudentPresent obj={obj} onPresentClick={(isPresent) => handlePresentClick(obj.email, isPresent)}></StudentPresent>
             </div>
             </>
           )
@@ -55,6 +95,9 @@ export const Admin = () => {
        }
         </div>
 
+        <button onClick={handleSubmit} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Submit
+        </button>
       </div>
     </div>
   );

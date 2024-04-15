@@ -1,4 +1,5 @@
 const User = require("../models/user_schema")
+const UserIsPresent = require("../models/Present_details")
 
 const home=(req,res)=>{
     try {
@@ -10,21 +11,20 @@ const home=(req,res)=>{
 
 const register = async (req, res) => {
     try {
-      // const data = req.body;
-      //console.log(req.body);
+
       const { username, email, number, password } = req.body;
   
       const userExist = await User.findOne({ email });
-      // //console.log(userExist)
   
       if (userExist) {
         return res.status(400).json({ msg: "email already exists" });
       }
-  
-      // Creating a new user instance
       const newUser = await User.create({ username, email, number, password });
-      
-      console.log(newUser)
+      res.status(201).json({
+        msg:newUser ,
+        token: await newUser.generateToken(),
+        userID : newUser._id.toString(),
+      })
       
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -58,9 +58,23 @@ const login = async (req, res) => {
     }
   };
 
-  const fetch_names=async(req,res)=>{
-    const data=await User.find();
-    res.status(200).json(data)
+  const saveAttendance=async(req,res)=>{
+    try {
 
+      const { email,present , date } = req.body;
+  
+      const userExist = await UserIsPresent.findOne({ email });
+  
+      if (userExist) {
+        return res.status(400).json({ msg: "email already exists" });
+      }
+      const newUser = await UserIsPresent.create({  email, present, date });
+      res.status(201).json({
+        msg:newUser ,
+      })
+      
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
-module.exports ={home,register,login,fetch_names}
+module.exports ={home,register,login,saveAttendance}

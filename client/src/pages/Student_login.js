@@ -43,8 +43,8 @@ export const Student_login = () => {
       }
 
   return (
-    <div>
-        <div className='flex w-[100vw] justify-center '>
+    <div className='w-[100vw] h-[100vh] bg-black'>
+        <div className='flex w-[100vw] justify-center  bg-black'>
       <div class="form-body w-[50vw]">
         <div class="row">
           <div class="form-holder">

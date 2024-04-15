@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from 'react'
 
-export const StudentPresent = ({obj}) => {
+export const StudentPresent = ({obj,onPresentClick}) => {
 const [clickedP,setclickedP]=useState(false)
 const [clickedA,setclickedA]=useState(false)
 const [studentArray,setstudentArray]=useState([])
 const handleclickP=()=>{
     setclickedP(true)
     setclickedA(false)
-    if (!studentArray.includes(obj.id)) {
-        setstudentArray([...studentArray, obj.id]);
-    }
-    console.log(studentArray)
+    onPresentClick(true);
 }
 const handleclickA=()=>{
     setclickedP(false)
     setclickedA(true)
-    if (studentArray.includes(obj.id)) {
-        const newstudentArray = studentArray.filter(id => id !== obj.id);
-        setstudentArray(newstudentArray);
-    }
+    onPresentClick(false);
+    // if (studentArray.includes(obj.email)) {
+    //     const newstudentArray = studentArray.filter(email => email !== obj.email);
+    //     setstudentArray(newstudentArray);
+    // }
 }
-useEffect(()=>{
-console.log(studentArray)
-},[studentArray])
+
   return (
     <div>
         <div className='pt-3 pb-3 pl-5 pr-5 mr-5 rounded-md mb-3 mt-3 bg-blue-300 '>
@@ -35,4 +31,4 @@ console.log(studentArray)
     </div>
   )
 }
-export const array=[]
+

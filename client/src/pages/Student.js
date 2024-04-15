@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
+import { useAuth } from '../store/auth';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 export const Student = () => {
+
+  const {storeTokenInLS}=useAuth()
+
+  const navigate=useNavigate()
 
   const [userdata,setuserdata]=useState({
     username : "",
@@ -34,7 +41,10 @@ export const Student = () => {
       if (response.ok) {
         const responseData = await response.json();
         console.log("after login: ", responseData);
-        // toast.success("Registration Successful");
+        // localStorage.setItem(responseData.token)
+        storeTokenInLS(responseData.token)
+        toast("Registration Successful");
+        navigate('/')
         
       }
     } catch (error) {
@@ -43,15 +53,14 @@ export const Student = () => {
 
   }
   return (
-    <div className='flex w-[100vw] justify-center '>
-      <div className="form-body w-[50vw]">
+    <div className='flex w-[100vw] justify-center h-[100vh] '>
+      <div className="form-body w-[50vw] flex items-center h-[100vh] justify-center">
         <div className="row">
           <div className="form-holder">
             <div className="form-content">
               <div className="form-items">
-                <h3>Register Today</h3>
-                <p>Fill in the data below.</p>
-                <form className="requires-validation" noValidate onSubmit={handlesubmit}>
+                <h3 className='mt-5 text-2xl'>Register Today</h3>
+                <form className="requires-validation mt-10" noValidate onSubmit={handlesubmit}>
 
                   <div className="col-md-12">
                     <input className="form-control" type="text" name="username" placeholder="Full Name" value={userdata.username} required onChange={handlechange}/>
@@ -71,44 +80,14 @@ export const Student = () => {
                     <div className="invalid-feedback">Email field cannot be blank!</div>
                   </div>
 
-                  <div className="col-md-12">
-                    <select className="form-select mt-3" >
-                      {/* <option selected disabled value="">Section</option>
-                      <option value="jweb">A</option>
-                      <option value="sweb">B</option>
-                      <option value="pmanager">C</option> */}
-                    </select>
-                    <div className="valid-feedback">You selected a position!</div>
-                    <div className="invalid-feedback">Please select a position!</div>
-                  </div>
-
+                
                   <div className="col-md-12">
                     <input className="form-control" type="password" name="password" placeholder="Password" value={userdata.password} required onChange={handlechange}/>
                     <div className="valid-feedback">Password field is valid!</div>
                     <div className="invalid-feedback">Password field cannot be blank!</div>
                   </div>
 
-                  <div className="col-md-12 mt-3">
-                    <label className="mb-3 mr-1" htmlFor="gender">Gender: </label>
-
-                    {/* <input type="radio" className="btn-check" name="gender" id="male" autocomplete="off" required />
-                    <label className="btn btn-sm btn-outline-secondary" for="male">Male</label>
-
-                    <input type="radio" className="btn-check" name="gender" id="female" autocomplete="off" required />
-                    <label className="btn btn-sm btn-outline-secondary" for="female">Female</label> */}
-{/* 
-                    <input type="radio" className="btn-check" name="gender" id="secret" autocomplete="off" required />
-                    <label className="btn btn-sm btn-outline-secondary" for="secret">Secret</label> */}
-                    <div className="valid-feedback mv-up">You selected a gender!</div>
-                    <div className="invalid-feedback mv-up">Please select a gender!</div>
-                  </div>
-
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value="" id="invalidCheck" required />
-                    <label className="form-check-label">I confirm that all data are correct</label>
-                    <div className="invalid-feedback">Please confirm that the entered data are all correct!</div>
-                  </div>
-
+                
                   <div className="form-button mt-3">
                     <button id="submit" type="submit" className="btn btn-primary">Login</button>
                   </div>
