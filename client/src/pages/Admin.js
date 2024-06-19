@@ -6,6 +6,11 @@ export const Admin = () => {
    const [nameData,setnameData]=useState([])
    const [currentDateTime, setCurrentDateTime] = useState(new Date());
    const [presentStudents, setPresentStudents] = useState([]);
+   const [UserPresent,setUserPresent] =useState({
+    email:"",
+    present:false,
+    date:"",
+   })
   
 
    const handlePresentClick = (id, isPresent) => {
@@ -24,23 +29,34 @@ export const Admin = () => {
     try {
       const attendanceDetails = nameData.map((student) => ({
         email: student.email,
-        isPresent: presentStudents.includes(student.email),
+        present: presentStudents.includes(student.email),
         date: currentDateTime.toDateString(),
       }));
-  
-      const response = await fetch("http://localhost:8000/saveAttendance", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(attendanceDetails),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to save attendance");
+
+      const len = attendanceDetails.length;
+      console.log(len)
+      let i = 0;
+      while (i < len) {
+        const response = await fetch("http://localhost:8000/saveAttendance", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(attendanceDetails[i]),
+        });
+      
+        // Optionally, you can check the response status here to handle errors
+        if (!response.ok) {
+          throw new Error("Failed to save attendance");
+        }
+        i++;
+        console.log("Attendance details SAVED")
       }
+      
   
-      console.log("Attendance details saved successfully");
+     
+  
+      
     } catch (error) {
       console.error("Error saving attendance:", error);
     }
@@ -57,8 +73,10 @@ export const Admin = () => {
           throw new Error('Network response was not ok');
         }
         const jsonData = await response.json();
-        //console.log(jsonData)
+        
         setnameData(jsonData)
+       
+        
       } catch (error) {
         console.log(error)
       }
@@ -74,8 +92,7 @@ export const Admin = () => {
     fetchData()
   }, []);
 
-    
-  
+ 
     
   return (
     <div className='flex'>

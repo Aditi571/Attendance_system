@@ -63,18 +63,35 @@ const login = async (req, res) => {
 
       const { email,present , date } = req.body;
   
-      const userExist = await UserIsPresent.findOne({ email });
-  
-      if (userExist) {
-        return res.status(400).json({ msg: "email already exists" });
-      }
       const newUser = await UserIsPresent.create({  email, present, date });
       res.status(201).json({
         msg:newUser ,
       })
       
+      
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
     }
   }
-module.exports ={home,register,login,saveAttendance}
+
+  const fetch_dashboard_details=async(req,res)=>{
+    try {
+      const userData=req.user;
+      console.log(userData)
+      return res.status(200).json({msg:userData});
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const fetch_names = async (req, res) => {
+    try {
+      const data = await User.find({});    
+      res.status(200).json(data);
+    } catch (error) {
+      console.error("Error fetching names:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };
+  
+module.exports ={home,register,login,saveAttendance,fetch_names,fetch_dashboard_details}

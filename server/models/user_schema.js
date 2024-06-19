@@ -23,6 +23,7 @@ const insightSchema = new mongoose.Schema({
 
 insightSchema.methods.generateToken = async function(){
     try {
+        console.log(process.env.JWT_SECRET_KEY)
         return jwt.sign({
             //payload
             email : this.email,
