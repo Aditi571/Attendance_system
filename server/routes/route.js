@@ -10,6 +10,8 @@ router.route('/register').post(controller.register)
 router.route('/login').post(controller.login)
 router.route('/fetch_names').get(controller.fetch_names)
 router.route('/saveAttendance').post(controller.saveAttendance)
-router.route('/userdetails').get(authmiddleware,controller.fetch_dashboard_details);
+//router.route('/userdetails').get(authmiddleware,controller.fetch_dashboard_details);
+router.route('/registerSchool').post(controller.registerSchool)
+router.route('/fetchSchools').get(controller.fetchSchools)
 
 module.exports=router

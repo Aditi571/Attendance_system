@@ -1,5 +1,7 @@
 const User = require("../models/user_schema")
 const UserIsPresent = require("../models/Present_details")
+const School =require("../models/schools")
+const { json } = require("express")
 
 const home=(req,res)=>{
     try {
@@ -8,6 +10,7 @@ const home=(req,res)=>{
        console.log(error) 
     }
 }
+
 
 const register = async (req, res) => {
     try {
@@ -93,5 +96,35 @@ const login = async (req, res) => {
       res.status(500).json({ error: "Internal server error" });
     }
   };
-  
-module.exports ={home,register,login,saveAttendance,fetch_names,fetch_dashboard_details}
+ 
+
+/************************************************** SCHOOL ********************************************************** */
+
+const registerSchool=async(req,res)=>{
+  try {
+    const {schoolName , username ,email,password}=req.body;
+    const isExist=await School.findOne({email})
+    if(isExist){
+     return res.status(200).json({msg: "User Exists"})
+    }
+    else{
+      const school = await School.create({schoolName , username ,email,password})
+      return res.status(200).json({
+        token : school.generateToken()
+      })
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const fetchSchools=async(req,res)=>{
+  try {
+    const data=await School.find({})
+    return res.status(200).json(data)
+  } catch (error) {
+    console.log(error)
+  }
+}
+module.exports ={home,register,login,saveAttendance,fetch_names,fetch_dashboard_details,registerSchool,fetchSchools}

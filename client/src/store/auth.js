@@ -5,6 +5,9 @@ export const AuthContext =createContext()
 export const AuthProvider = ({children})=>{
     const [token,settoken] =useState(localStorage.getItem("token"))
     const  [user,setuser]=useState()
+    const [schools,setschools]=useState();
+
+
     const storeTokenInLS =(serverToken)=>{
         return localStorage.setItem("token",serverToken);
     };
@@ -33,10 +36,24 @@ export const AuthProvider = ({children})=>{
         }
     }
 
+    const fetchSchools=async()=>{
+        try {
+            const response=await fetch("http://localhost:8000/fetchSchools")
+            if(response.ok){
+                const data=await response.json()
+                console.log("auth data", data)
+                setschools(data)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(()=>{
-        userAuthentication();
-    },[])
-    return <AuthContext.Provider value={{isloggedIn,storeTokenInLS ,logoutUser,user}}>
+        //userAuthentication();
+        fetchSchools();
+     },[])
+    return <AuthContext.Provider value={{isloggedIn,storeTokenInLS ,logoutUser,user,schools}}>
         {children}
     </AuthContext.Provider>
 }

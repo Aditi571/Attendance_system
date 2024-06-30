@@ -5,12 +5,17 @@ import { Student } from './pages/Student';
 import { Admin } from './pages/Admin';
 import { Student_login } from './pages/Student_login';
 import { Logout } from './pages/Logout';
+import { Main } from './pages/Main';
+import { RegisterSchool } from './pages/RegisterSchool';
+import { JoinSchool } from './pages/JoinSchool';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home/>}></Route>
+        <Route path='/' element={<Main/>}></Route>
+        <Route path='/registerSchool' element={<RegisterSchool/>}></Route>
+        <Route path='/joinSchool' element={<JoinSchool/>}></Route>
         <Route path='/student' element={<Student/>}></Route>
         <Route path='/administrator' element={<Admin/>}></Route>
         <Route path='/student/login' element={<Student_login/>}></Route>
